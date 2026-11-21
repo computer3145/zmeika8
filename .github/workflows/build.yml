@@ -1,0 +1,41 @@
+name: Build EXE and DEB
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          pip install pyinstaller pygame
+          pyinstaller --onefile --noconsole --name zmeika8 main.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zmeika8-windows
+          path: dist/zmeika8.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          pip install pyinstaller pygame
+          pyinstaller --onefile --name zmeika8 main.py
+          mkdir -p pkg/DEBIAN pkg/usr/local/bin
+          cp dist/zmeika8 pkg/usr/local/bin/zmeika8
+          chmod +x pkg/usr/local/bin/zmeika8
+          echo -e "Package: zmeika8\nVersion: 1.0\nArchitecture: amd64\nMaintainer: Dev <dev@example.com>\nDescription: Zmeika8 Game" > pkg/DEBIAN/control
+          dpkg-deb --build pkg zmeika8.deb
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zmeika8-linux
+          path: zmeika8.deb
