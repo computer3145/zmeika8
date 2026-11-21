@@ -1,3 +1,4 @@
+
 name: Build EXE and DEB
 
 on:
@@ -14,7 +15,7 @@ jobs:
           python-version: '3.11'
       - run: |
           pip install pyinstaller pygame
-          pyinstaller --onefile --noconsole --name zmeika8 main.py
+          pyinstaller --onefile --noconsole --name zmeika8 zmeika8.py
       - uses: actions/upload-artifact@v4
         with:
           name: zmeika8-windows
@@ -29,11 +30,11 @@ jobs:
           python-version: '3.11'
       - run: |
           pip install pyinstaller pygame
-          pyinstaller --onefile --name zmeika8 main.py
+          pyinstaller --onefile --name zmeika8 zmeika8.py
           mkdir -p pkg/DEBIAN pkg/usr/local/bin
           cp dist/zmeika8 pkg/usr/local/bin/zmeika8
           chmod +x pkg/usr/local/bin/zmeika8
-          echo -e "Package: zmeika8\nVersion: 1.0\nArchitecture: amd64\nMaintainer: Dev <dev@example.com>\nDescription: Zmeika8 Game" > pkg/DEBIAN/control
+          echo -e "Package: zmeika8\nVersion: 1.0\nArchitecture: amd64\nMaintainer: computer3145 <dev@example.com>\nDescription: Zmeika8 Game" > pkg/DEBIAN/control
           dpkg-deb --build pkg zmeika8.deb
       - uses: actions/upload-artifact@v4
         with:
